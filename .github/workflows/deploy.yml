@@ -15,12 +15,17 @@ jobs:
           fetch-depth: 0
           lfs: true
 
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install Hugging Face Hub CLI
+        run: pip install -U "huggingface_hub[cli]"
+
       - name: Deploy to Hugging Face Spaces
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          # Melakukan login menggunakan token hf kamu
-          hf auth login --token $HF_TOKEN
-
-          # Mengunggah proyek ke Spaces menggunakan perintah hf terbaru
-          hf upload cakrabudiman/fastapi-cloud-demo . . --repo-type=space
+          # Jalankan perintah upload langsung via modul python agar aman dari error command not found
+          python -m huggingface_hub.cli.cli_utils upload cakrabudiman/fastapi-cloud-demo . . --repo-type=space --token=$HF_TOKEN
