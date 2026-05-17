@@ -15,12 +15,12 @@ jobs:
           fetch-depth: 0
           lfs: true
 
-      - name: Install Hugging Face CLI
-        run: pip install huggingface_hub
-
       - name: Deploy to Hugging Face Spaces
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          # Menggunakan alat resmi HF untuk mengunggah folder proyek langsung ke Space
-          huggingface-cli upload cakrabudiman/fastapi-cloud-demo . . --repo-type=space --token=$HF_TOKEN
+          # Melakukan login menggunakan token hf kamu
+          hf auth login --token $HF_TOKEN
+
+          # Mengunggah proyek ke Spaces menggunakan perintah hf terbaru
+          hf upload cakrabudiman/fastapi-cloud-demo . . --repo-type=space
