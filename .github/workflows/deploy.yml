@@ -3,8 +3,6 @@ name: Sync to Hugging Face Hub
 on:
   push:
     branches: [main]
-
-  # Mengizinkan jalannya automasi secara manual dari tab Actions GitHub
   workflow_dispatch:
 
 jobs:
@@ -17,9 +15,12 @@ jobs:
           fetch-depth: 0
           lfs: true
 
-      - name: Push to HF
+      - name: Install Hugging Face CLI
+        run: pip install huggingface_hub
+
+      - name: Deploy to Hugging Face Spaces
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          git remote add hf https://root:$HF_TOKEN@huggingface.co/spaces/cakrabudiman/fastapi-cloud-demo
-          git push --force hf main
+          # Menggunakan alat resmi HF untuk mengunggah folder proyek langsung ke Space
+          huggingface-cli upload cakrabudiman/fastapi-cloud-demo . . --repo-type=space --token=$HF_TOKEN
