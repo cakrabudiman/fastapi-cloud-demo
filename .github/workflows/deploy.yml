@@ -15,17 +15,16 @@ jobs:
           fetch-depth: 0
           lfs: true
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
-
-      - name: Install Hugging Face Hub CLI
-        run: pip install -U "huggingface_hub[cli]"
-
       - name: Deploy to Hugging Face Spaces
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          # Jalankan perintah upload langsung via modul python agar aman dari error command not found
-          python -m huggingface_hub.cli.cli_utils upload cakrabudiman/fastapi-cloud-demo . . --repo-type=space --token=$HF_TOKEN
+          # 1. Konfigurasi identitas Git di server agar dikenali oleh Hugging Face
+          git config --global user.email "cakrabudimanputra@gmail.com"
+          git config --global user.name "cakrabudiman"
+
+          # 2. Tambahkan alamat remote Hugging Face menggunakan format token yang valid
+          git remote add hf https://cakrabudiman:$HF_TOKEN@huggingface.co/spaces/cakrabudiman/fastapi-cloud-demo
+
+          # 3. Paksa push kode dari branch main GitHub ke branch main Hugging Face
+          git push --force hf main
